@@ -29,7 +29,7 @@
     .section,
     footer {
      text-align: center;
-    }    
+    }
     header{
       padding: 48px 20px 28px;
       border-bottom: 1px solid var(--border);
@@ -44,7 +44,7 @@
       letter-spacing:-0.02em;
     }
     .sub{
-      margin:0;
+      margin:0 auto;
       color:var(--muted);
       font-size: 16px;
       max-width: 72ch;
@@ -61,7 +61,7 @@
       letter-spacing:-0.01em;
     }
     .section p{
-      margin: 0 0 14px;
+      margin: 0 auto 14px;
       color: var(--muted);
       max-width: 80ch;
     }
@@ -87,27 +87,15 @@
       .card{ padding: 10px; border-radius: 14px; }
     }
     @media (min-width: 1024px) {
-  body {
-    font-size: 19px;
-    line-height: 1.6;
-  }
-
-  h1 {
-    font-size: 56px;
-  }
-
-  h2 {
-    font-size: 30px;
-  }
-
-  .sub {
-    font-size: 18px;
-  }
-
-  .section p {
-    font-size: 18px;
-  }
-}
+      body {
+        font-size: 19px;
+        line-height: 1.6;
+      }
+      h1 { font-size: 56px; }
+      h2 { font-size: 30px; }
+      .sub { font-size: 18px; }
+      .section p { font-size: 18px; }
+    }
   </style>
 </head>
 
@@ -116,7 +104,7 @@
     <div class="wrap">
       <h1>NYC Pizza: Ratings, Chains, and Where They Are</h1>
       <p class="sub">
-        NYC has more than 2,000 pizzerias—but the city’s worst ratings cluster in a very specific place.
+        NYC has more than 2,000 pizzerias—but the city’s lowest ratings cluster in a very specific place.
         Scroll through to see where chains dominate the bottom of the scale.
       </p>
     </div>
@@ -131,7 +119,6 @@
         <p>A guided look at NYC’s lowest-rated pizzerias.</p>
         <div class="card">
           <div class="flourish-embed" data-src="story/3437011?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
             <noscript>
               <img src="https://public.flourish.studio/story/3437011/thumbnail" width="100%" alt="visualization" />
             </noscript>
@@ -139,13 +126,31 @@
         </div>
       </section>
 
-      <!-- 2) Largest chains -->
+      <!-- 2) Stacked % bar (before bubble chart) -->
+      <section class="section" id="stacked-bar">
+        <h2>Who owns NYC’s lowest-rated pizzerias?</h2>
+        <p>
+          Chains make up a disproportionate share of sub-3-star locations, while independents dominate the higher ratings.
+          Each bar shows the share of NYC pizzerias in a rating range, split by ownership type.
+        </p>
+        <div class="card">
+          <div class="flourish-embed flourish-chart" data-src="visualisation/26892772?812552">
+            <noscript>
+              <img src="https://public.flourish.studio/visualisation/26892772/thumbnail" width="100%" alt="chart visualization" />
+            </noscript>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3) Largest chains (bubble chart) -->
       <section class="section" id="chains">
         <h2>Who runs the pizza business?</h2>
-        <p>Bubble size reflects number of locations across NYC.</p>
+        <p>
+          Bubble size reflects number of locations across NYC.
+          (This looks at store footprint—not whether the pizza is “good” or “bad.”)
+        </p>
         <div class="card">
           <div class="flourish-embed flourish-interactive-diagram" data-src="visualisation/26881162?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
             <noscript>
               <img src="https://public.flourish.studio/visualisation/26881162/thumbnail" width="100%" alt="interactive diagram visualization" />
             </noscript>
@@ -153,13 +158,28 @@
         </div>
       </section>
 
-      <!-- 3) Pizzerias per 10k -->
+      <!-- 4) Beeswarm (after bubble chart) -->
+      <section class="section" id="beeswarm">
+        <h2>Most chain locations aren’t poorly rated</h2>
+        <p>
+          Low ratings at large chains are real—but they’re relatively rare when you look location by location.
+          Each dot represents a single NYC location.
+        </p>
+        <div class="card">
+          <div class="flourish-embed flourish-scatter" data-src="visualisation/26893515?812552">
+            <noscript>
+              <img src="https://public.flourish.studio/visualisation/26893515/thumbnail" width="100%" alt="scatter visualization" />
+            </noscript>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5) Pizzerias per 10k -->
       <section class="section" id="density">
         <h2>Pizza density by neighborhood</h2>
         <p>How many pizzerias exist for every 10,000 residents.</p>
         <div class="card">
           <div class="flourish-embed flourish-map" data-src="visualisation/26149639?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
             <noscript>
               <img src="https://public.flourish.studio/visualisation/26149639/thumbnail" width="100%" alt="map visualization" />
             </noscript>
@@ -167,13 +187,12 @@
         </div>
       </section>
 
-      <!-- 4) Full interactive ratings map -->
+      <!-- 6) Full interactive ratings map -->
       <section class="section" id="full-map">
         <h2>Explore every NYC pizzeria</h2>
         <p>Search, filter, and zoom to see ratings across the entire city.</p>
         <div class="card">
           <div class="flourish-embed flourish-map" data-src="visualisation/26881522?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
             <noscript>
               <img src="https://public.flourish.studio/visualisation/26881522/thumbnail" width="100%" alt="map visualization" />
             </noscript>
@@ -192,5 +211,8 @@
       </div>
     </div>
   </footer>
+
+  <!-- Load Flourish embed script once -->
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
 </body>
 </html>
