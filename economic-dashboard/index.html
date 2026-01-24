@@ -2,410 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Economic Dashboard</title>
-  <meta name="description" content="Live charts tracking major economic metrics." />
 
   <style>
-    :root{
-      --bg:#0b0f14;
-      --panel:#111826;
-      --panel2:#0f1623;
-      --text:#e6edf3;
-      --muted:#93a4b8;
-      --border:rgba(255,255,255,.10);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:16px;
-    }
-
-    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background: radial-gradient(1200px 700px at 10% 0%, #18233a 0%, var(--bg) 55%) no-repeat, var(--bg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+      color:#e6edf3;
+      background:
+        radial-gradient(1200px 700px at 10% 0%, #18233a 0%, #0b0f14 55%)
+        no-repeat,
+        #0b0f14;
     }
-
-    a{color:inherit}
 
     .wrap{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 28px 18px 60px;
+      max-width:1100px;
+      margin:0 auto;
+      padding:36px 18px 64px;
     }
 
-    header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:16px;
-      margin-bottom: 18px;
+    h1{
+      font-size: clamp(30px, 3.5vw, 42px);
+      margin:0 0 12px 0;
+      letter-spacing:-0.02em;
     }
 
-    .titleblock h1{
-      margin:0 0 8px 0;
-      font-size: clamp(28px, 3vw, 38px);
-      letter-spacing: -0.02em;
-    }
-    .titleblock p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.4;
-      max-width: 62ch;
+    .deck{
+      max-width:68ch;
+      color:#9fb0c4;
+      font-size:18px;
+      line-height:1.45;
+      margin-bottom:28px;
     }
 
-    .controls{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
+    .chart-block{
+      margin-bottom:36px;
+      padding:18px 18px 22px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
     }
 
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      color:var(--text);
-      padding:10px 12px;
-      border-radius: 999px;
-      cursor:pointer;
-      box-shadow: 0 6px 18px rgba(0,0,0,.2);
-      font-weight:600;
-      font-size:14px;
-    }
-    button:hover{filter:brightness(1.08)}
-    button:active{transform: translateY(1px)}
-
-    .hint{
-      margin: 14px 0 18px;
-      padding: 10px 12px;
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-      color: var(--muted);
-      background: rgba(255,255,255,.03);
-      font-size: 13px;
-      line-height: 1.35;
+    .chart-title{
+      font-weight:700;
+      font-size:16px;
+      margin:0 0 4px;
     }
 
-    /* Dashboard cards */
-    #dashboard{
-      display:grid;
-      gap:14px;
+    .chart-subtitle{
+      color:#9fb0c4;
+      font-size:13px;
+      margin:0 0 12px;
     }
 
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-
-    .card.dragging{
-      opacity:.6;
-      outline:2px solid rgba(255,255,255,.22);
-    }
-
-    .card-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding: 12px 14px;
-      background: rgba(0,0,0,.22);
-      border-bottom:1px solid var(--border);
-    }
-
-    .card-head .left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 0;
-    }
-
-    .grab{
-      width: 34px;
-      height: 34px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--border);
-      border-radius: 10px;
-      background: rgba(255,255,255,.04);
-      cursor: grab;
-      user-select:none;
-      flex: 0 0 auto;
-    }
-    .grab:active{cursor:grabbing}
-
-    .meta{
-      min-width:0;
-    }
-    .meta .name{
-      font-weight:800;
-      letter-spacing: -0.01em;
-      margin:0;
-      font-size: 15px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .meta .sub{
-      margin:2px 0 0;
-      color: var(--muted);
-      font-size: 12.5px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-body{
-      padding: 10px 12px 14px;
-      background: rgba(0,0,0,.10);
-    }
-
-    /* Flourish embed: keep it responsive, give it breathing room */
-    .flourish-embed{
-      width:100%;
-      min-height: 340px;
-    }
-
-    /* Footer */
     footer{
-      margin-top: 24px;
-      color: var(--muted);
-      font-size: 12.5px;
-    }
-
-    @media (min-width: 900px){
-      #dashboard{
-        gap:16px;
-      }
-      .card-body{
-        padding: 12px 14px 16px;
-      }
+      margin-top:48px;
+      color:#7f92a8;
+      font-size:13px;
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <header>
-      <div class="titleblock">
-        <h1>Economic Dashboard</h1>
-        <p>
-          Live charts tracking key market and macro signals—designed for quick scanning, context,
-          and trend-watching. (Placeholder deck—swap with your final language.)
-        </p>
-      </div>
+    <h1>Economic Dashboard</h1>
 
-      <div class="controls">
-        <button id="resetBtn" type="button">Reset order</button>
-      </div>
-    </header>
+    <p class="deck">
+      Live charts tracking key market and macro signals—designed for quick scanning,
+      context, and trend-watching.
+    </p>
 
-    <div class="hint">
-      <strong>Tip:</strong> Drag any card by the handle to reorder. Your order is saved in this browser.
-    </div>
+    <!-- Major Stock Indices -->
+    <section class="chart-block">
+      <p class="chart-title">Major Stock Indices</p>
+      <p class="chart-subtitle">S&amp;P 500, Dow, Nasdaq</p>
+      <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552"></div>
+    </section>
 
-    <main id="dashboard" aria-label="Economic dashboard charts"></main>
-
-    <footer>
-      <div>© David Foster Graphics — Placeholder footer text.</div>
-    </footer>
-  </div>
-
-  <script>
-    // --- 1) Define your charts once, reorderable via array order ---
-    // IMPORTANT: You pasted the same Flourish visualisation ID for the first TWO embeds.
-    // I’m keeping your embeds exactly as provided; when you’re ready, just swap the second one’s ID.
-    const CHARTS_DEFAULT = [
-      {
-        id: "indices",
-        title: "Major Stock Indices",
-        subtitle: "S&P 500, Dow, Nasdaq (placeholder subtitle)",
-        embedHtml: `
-          <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
-            <noscript><img src="https://public.flourish.studio/visualisation/27353073/thumbnail" width="100%" alt="chart visualization" /></noscript>
-          </div>
-        `
-      },
-      {
-        id: "dollar-yield",
-        title: "Dollar vs Treasury Yield",
-        subtitle: "USD and rates relationship (placeholder subtitle)",
-        embedHtml: `
-          <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
-            <noscript><img src="https://public.flourish.studio/visualisation/27353073/thumbnail" width="100%" alt="chart visualization" /></noscript>
-          </div>
-        `
-      },
-      {
-        id: "metals",
-        title: "Gold and Silver Prices",
-        subtitle: "Precious metals spot trend (placeholder subtitle)",
-        embedHtml: `
-          <div class="flourish-embed flourish-chart" data-src="visualisation/27200704?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
-            <noscript><img src="https://public.flourish.studio/visualisation/27200704/thumbnail" width="100%" alt="chart visualization" /></noscript>
-          </div>
-        `
-      },
-      {
-        id: "mortgage-yield",
-        title: "30-Year Mortgage vs Treasury Yield",
-        subtitle: "Housing finance vs benchmark rates (placeholder subtitle)",
-        embedHtml: `
-          <div class="flourish-embed flourish-chart" data-src="visualisation/27284880?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
-            <noscript><img src="https://public.flourish.studio/visualisation/27284880/thumbnail" width="100%" alt="chart visualization" /></noscript>
-          </div>
-        `
-      },
-      {
-        id: "cpi",
-        title: "CPI (Monthly)",
-        subtitle: "Inflation readings over time (placeholder subtitle)",
-        embedHtml: `
-          <div class="flourish-embed flourish-chart" data-src="visualisation/25104015?812552">
-            <script src="https://public.flourish.studio/resources/embed.js"></script>
-            <noscript><img src="https://public.flourish.studio/visualisation/25104015/thumbnail" width="100%" alt="chart visualization" /></noscript>
-          </div>
-        `
-      }
-    ];
-
-    const STORAGE_KEY = "dfg_econ_dashboard_order_v1";
-
-    function loadOrder() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-        const ids = JSON.parse(raw);
-        if (!Array.isArray(ids)) return null;
-        return ids;
-      } catch {
-        return null;
-      }
-    }
-
-    function saveOrder(ids) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-    }
-
-    function getChartsInSavedOrder() {
-      const saved = loadOrder();
-      if (!saved) return [...CHARTS_DEFAULT];
-
-      const byId = new Map(CHARTS_DEFAULT.map(c => [c.id, c]));
-      const ordered = [];
-      for (const id of saved) {
-        if (byId.has(id)) ordered.push(byId.get(id));
-      }
-      // Append any new charts not in saved list (future-proof)
-      for (const c of CHARTS_DEFAULT) {
-        if (!saved.includes(c.id)) ordered.push(c);
-      }
-      return ordered;
-    }
-
-    // --- 2) Render ---
-    const dashboardEl = document.getElementById("dashboard");
-    let charts = getChartsInSavedOrder();
-
-    function render() {
-      dashboardEl.innerHTML = "";
-      charts.forEach((c) => {
-        const card = document.createElement("section");
-        card.className = "card";
-        card.setAttribute("draggable", "true");
-        card.dataset.chartId = c.id;
-
-        card.innerHTML = `
-          <div class="card-head">
-            <div class="left">
-              <div class="grab" aria-label="Drag to reorder" title="Drag to reorder">⋮⋮</div>
-              <div class="meta">
-                <p class="name">${escapeHtml(c.title)}</p>
-                <p class="sub">${escapeHtml(c.subtitle || "")}</p>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            ${c.embedHtml}
-          </div>
-        `;
-
-        dashboardEl.appendChild(card);
-      });
-
-      // Ensure Flourish script runs (it’s already in each embed block, but reordering re-inserts nodes)
-      // Flourish’s embed.js is safe to include multiple times; still, we can also ensure it exists once:
-      ensureFlourishScript();
-    }
-
-    function ensureFlourishScript(){
-      const src = "https://public.flourish.studio/resources/embed.js";
-      if ([...document.scripts].some(s => s.src === src)) return;
-      const s = document.createElement("script");
-      s.src = src;
-      s.async = true;
-      document.body.appendChild(s);
-    }
-
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, (m) => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
-    }
-
-    // --- 3) Drag & drop ordering (native HTML5) ---
-    let dragSrcEl = null;
-
-    dashboardEl.addEventListener("dragstart", (e) => {
-      const card = e.target.closest(".card");
-      if (!card) return;
-      dragSrcEl = card;
-      card.classList.add("dragging");
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", card.dataset.chartId);
-    });
-
-    dashboardEl.addEventListener("dragend", (e) => {
-      const card = e.target.closest(".card");
-      if (card) card.classList.remove("dragging");
-      dragSrcEl = null;
-    });
-
-    dashboardEl.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-
-      const overCard = e.target.closest(".card");
-      if (!overCard || !dragSrcEl || overCard === dragSrcEl) return;
-
-      const rect = overCard.getBoundingClientRect();
-      const next = (e.clientY - rect.top) > (rect.height / 2);
-      dashboardEl.insertBefore(dragSrcEl, next ? overCard.nextSibling : overCard);
-    });
-
-    dashboardEl.addEventListener("drop", (e) => {
-      e.preventDefault();
-      // Read DOM order back into charts array
-      const ids = [...dashboardEl.querySelectorAll(".card")].map(el => el.dataset.chartId);
-      charts = ids.map(id => CHARTS_DEFAULT.find(c => c.id === id)).filter(Boolean);
-      saveOrder(ids);
-    });
-
-    // --- 4) Reset ---
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      localStorage.removeItem(STORAGE_KEY);
-      charts = [...CHARTS_DEFAULT];
-      render();
-    });
-
-    render();
-  </script>
-</body>
-</html>
+    <!-- Dollar vs Treasury Yield -->
+    <section class="chart-block">
+      <p class="chart-title">Dollar vs Treasury Yield</p>
+      <p class="chart-subtitle">USD and rate
