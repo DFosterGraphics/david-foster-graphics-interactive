@@ -1,87 +1,128 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Economic Dashboard</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Economic Dashboard — David Foster Graphics</title>
+<meta name="description" content="Live charts tracking key market and macroeconomic indicators." />
+<meta name="color-scheme" content="light">
 
-  <style>
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-                   Roboto, Helvetica, Arial, sans-serif;
-      color:#e6edf3;
-      background:
-        radial-gradient(1200px 700px at 10% 0%, #18233a 0%, #0b0f14 55%)
-        no-repeat,
-        #0b0f14;
-    }
+<style>
+  :root { --max: 1100px; }
 
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:36px 18px 64px;
-    }
+  body {
+    margin: 0;
+    font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    color: #111;
+    background: #fff;
+  }
 
-    h1{
-      font-size: clamp(30px, 3.5vw, 42px);
-      margin:0 0 12px 0;
-      letter-spacing:-0.02em;
-    }
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 28px 16px 48px;
+    text-align: center;
+  }
 
-    .deck{
-      max-width:68ch;
-      color:#9fb0c4;
-      font-size:18px;
-      line-height:1.45;
-      margin-bottom:28px;
-    }
+  h1 {
+    margin: 0 0 10px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.15;
+  }
 
-    .chart-block{
-      margin-bottom:36px;
-      padding:18px 18px 22px;
-      border-radius:16px;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-    }
+  .deck {
+    margin: 0 auto 22px;
+    max-width: 46rem;
+    color: #333;
+    font-size: clamp(17px, 2.6vw, 20px);
+  }
 
-    .chart-title{
-      font-weight:700;
-      font-size:16px;
-      margin:0 0 4px;
-    }
+  .hr {
+    width: 90px;
+    height: 3px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin: 14px auto 26px;
+  }
 
-    .chart-subtitle{
-      color:#9fb0c4;
-      font-size:13px;
-      margin:0 0 12px;
-    }
+  .label {
+    margin: 28px 0 8px;
+    color: #666;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
 
-    footer{
-      margin-top:48px;
-      color:#7f92a8;
-      font-size:13px;
-    }
-  </style>
-</head>
+  .viz {
+    margin: 0 auto 30px;
+  }
 
-<body>
-  <div class="wrap">
-    <h1>Economic Dashboard</h1>
+  .credit {
+    margin: 18px 0 0;
+    color: #666;
+    font-size: 14px;
+  }
 
-    <p class="deck">
-      Live charts tracking key market and macro signals—designed for quick scanning,
-      context, and trend-watching.
-    </p>
+  .credit a {
+    color: #06c;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+</style>
 
-    <!-- Major Stock Indices -->
-    <section class="chart-block">
-      <p class="chart-title">Major Stock Indices</p>
-      <p class="chart-subtitle">S&amp;P 500, Dow, Nasdaq</p>
-      <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552"></div>
-    </section>
+<div class="wrap">
+  <h1>Economic Dashboard</h1>
+  <div class="hr"></div>
 
-    <!-- Dollar vs Treasury Yield -->
-    <section class="chart-block">
-      <p class="chart-title">Dollar vs Treasury Yield</p>
-      <p class="chart-subtitle">USD and rate
+  <p class="deck">
+    Live charts tracking key market and macroeconomic signals, designed for quick
+    scanning, context, and trend-watching.
+  </p>
+
+  <p class="label">Major Stock Indices</p>
+  <div class="viz">
+    <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552"></div>
+    <noscript>
+      <img src="https://public.flourish.studio/visualisation/27353073/thumbnail" width="100%" alt="chart visualization" />
+    </noscript>
+  </div>
+
+  <p class="label">Dollar vs Treasury Yield</p>
+  <div class="viz">
+    <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552"></div>
+    <noscript>
+      <img src="https://public.flourish.studio/visualisation/27353073/thumbnail" width="100%" alt="chart visualization" />
+    </noscript>
+  </div>
+
+  <p class="label">Gold and Silver Prices</p>
+  <div class="viz">
+    <div class="flourish-embed flourish-chart" data-src="visualisation/27200704?812552"></div>
+    <noscript>
+      <img src="https://public.flourish.studio/visualisation/27200704/thumbnail" width="100%" alt="chart visualization" />
+    </noscript>
+  </div>
+
+  <p class="label">30-Year Mortgage vs Treasury Yield</p>
+  <div class="viz">
+    <div class="flourish-embed flourish-chart" data-src="visualisation/27284880?812552"></div>
+    <noscript>
+      <img src="https://public.flourish.studio/visualisation/27284880/thumbnail" width="100%" alt="chart visualization" />
+    </noscript>
+  </div>
+
+  <p class="label">Consumer Price Index · Monthly</p>
+  <div class="viz">
+    <div class="flourish-embed flourish-chart" data-src="visualisation/25104015?812552"></div>
+    <noscript>
+      <img src="https://public.flourish.studio/visualisation/25104015/thumbnail" width="100%" alt="chart visualization" />
+    </noscript>
+  </div>
+
+  <p class="credit">
+    Visuals: David Foster Graphics<br>
+    ← <a href="../">Back to “The Work”</a>
+  </p>
+</div>
+
+<script src="https://public.flourish.studio/resources/embed.js"></script>
