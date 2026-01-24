@@ -1,90 +1,135 @@
 <!doctype html>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Economic Dashboard — David Foster Graphics</title>
-<meta name="description" content="Live charts tracking key market and macroeconomic indicators." />
-<meta name="color-scheme" content="light">
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Economic Dashboard — David Foster Graphics</title>
+  <meta name="description" content="Live charts tracking key market and macroeconomic indicators." />
+  <meta name="color-scheme" content="light">
 
+  <style>
+    :root { --max: 1100px; }
 
-<!-- Small performance wins -->
-<link rel="preconnect" href="https://public.flourish.studio">
-<link rel="dns-prefetch" href="https://public.flourish.studio">
+    body {
+      margin: 0;
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: #111;
+      background: #fff;
+    }
 
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+      text-align: center;
+    }
 
-<style>
-:root { --max: 1100px; }
+    h1 {
+      margin: 0 0 10px;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.15;
+    }
 
+    .deck {
+      margin: 0 auto 22px;
+      max-width: 46rem;
+      color: #333;
+      font-size: clamp(17px, 2.6vw, 20px);
+    }
 
-body {
-margin: 0;
-font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-color: #111;
-background: #fff;
-}
+    .hr {
+      width: 90px;
+      height: 3px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      margin: 14px auto 26px;
+    }
 
+    .label {
+      margin: 28px 0 8px;
+      color: #666;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
 
-.wrap {
-max-width: var(--max);
-margin: 0 auto;
-padding: 28px 16px 48px;
-text-align: center;
-}
+    .viz {
+      margin: 0 auto 34px;
+    }
 
+    .credit {
+      margin: 18px 0 0;
+      color: #666;
+      font-size: 14px;
+    }
 
-h1 {
-margin: 0 0 10px;
-font-weight: 750;
-letter-spacing: -0.01em;
-font-size: clamp(32px, 5vw, 48px);
-line-height: 1.15;
-}
+    .credit a {
+      color: #06c;
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+    }
+  </style>
+</head>
 
+<body>
+  <div class="wrap">
+    <h1>Economic Dashboard</h1>
+    <div class="hr"></div>
 
-.deck {
-margin: 0 auto 22px;
-max-width: 46rem;
-color: #333;
-font-size: clamp(17px, 2.6vw, 20px);
-}
+    <p class="deck">
+      Live charts tracking key market and macroeconomic signals, designed for quick
+      scanning, context, and trend-watching.
+    </p>
 
+    <p class="label">Major Stock Indices</p>
+    <div class="viz">
+      <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552"></div>
+      <noscript>
+        <img src="https://public.flourish.studio/visualisation/27353073/thumbnail" width="100%" alt="Major stock indices chart thumbnail" />
+      </noscript>
+    </div>
 
-.hr {
-width: 90px;
-height: 3px;
-background: #e5e7eb;
-border-radius: 2px;
-margin: 14px auto 26px;
-}
+    <p class="label">Dollar vs Treasury Yield</p>
+    <div class="viz">
+      <div class="flourish-embed flourish-chart" data-src="visualisation/27220639?812552"></div>
+      <noscript>
+        <img src="https://public.flourish.studio/visualisation/27220639/thumbnail" width="100%" alt="Dollar vs Treasury yield chart thumbnail" />
+      </noscript>
+    </div>
 
+    <p class="label">Gold and Silver Prices</p>
+    <div class="viz">
+      <div class="flourish-embed flourish-chart" data-src="visualisation/27200704?812552"></div>
+      <noscript>
+        <img src="https://public.flourish.studio/visualisation/27200704/thumbnail" width="100%" alt="Gold and silver prices chart thumbnail" />
+      </noscript>
+    </div>
 
-.label {
-margin: 28px 0 8px;
-color: #666;
-font-size: 14px;
-text-transform: uppercase;
-letter-spacing: .06em;
-}
+    <p class="label">30-Year Mortgage vs Treasury Yield</p>
+    <div class="viz">
+      <div class="flourish-embed flourish-chart" data-src="visualisation/27284880?812552"></div>
+      <noscript>
+        <img src="https://public.flourish.studio/visualisation/27284880/thumbnail" width="100%" alt="Mortgage vs Treasury yield chart thumbnail" />
+      </noscript>
+    </div>
 
+    <p class="label">Consumer Price Index · Monthly</p>
+    <div class="viz">
+      <div class="flourish-embed flourish-chart" data-src="visualisation/25104015?812552"></div>
+      <noscript>
+        <img src="https://public.flourish.studio/visualisation/25104015/thumbnail" width="100%" alt="CPI monthly chart thumbnail" />
+      </noscript>
+    </div>
 
-.viz {
-margin: 0 auto 34px;
-min-height: 240px; /* prevents layout jump while loading */
-}
+    <p class="credit">
+      Visuals: David Foster Graphics<br>
+      ← <a href="../">Back to “The Work”</a>
+    </p>
+  </div>
 
-
-.credit {
-margin: 18px 0 0;
-color: #666;
-font-size: 14px;
-}
-
-
-.credit a {
-color: #06c;
-text-decoration: none;
-border-bottom: 1px solid currentColor;
-}
-</style>
-
-
-</script>
+  <!-- Load Flourish ONCE, globally -->
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+</body>
+</html>
