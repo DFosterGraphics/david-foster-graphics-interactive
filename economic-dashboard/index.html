@@ -48,7 +48,7 @@
     }
 
     .label {
-      margin: 28px 0 8px;
+      margin: 28px 0 10px;
       color: #666;
       font-size: 14px;
       text-transform: uppercase;
@@ -59,6 +59,18 @@
       margin: 0 auto 34px;
     }
 
+    /* Responsive iframe container (prevents layout shift) */
+    .frame {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      /* give Safari some breathing room */
+      min-height: 420px;
+    }
+
+    /* If you want different heights per chart, tweak inline style on each iframe */
     .credit {
       margin: 18px 0 0;
       color: #666;
@@ -85,41 +97,76 @@
 
     <p class="label">Major Stock Indices</p>
     <div class="viz">
-      <div class="flourish-embed flourish-chart" data-src="visualisation/27353073?812552"></div>
+      <iframe
+        class="frame"
+        loading="lazy"
+        title="Major Stock Indices"
+        src="https://flo.uri.sh/visualisation/27353073/embed"
+        style="height:560px"
+        allow="fullscreen"
+      ></iframe>
       <noscript>
-        <img src="https://public.flourish.studio/visualisation/27353073/thumbnail" width="100%" alt="Major stock indices chart thumbnail" />
+        <a href="https://public.flourish.studio/visualisation/27353073/" target="_blank" rel="noopener">View chart on Flourish</a>
       </noscript>
     </div>
 
     <p class="label">Dollar vs Treasury Yield</p>
     <div class="viz">
-      <div class="flourish-embed flourish-chart" data-src="visualisation/27220639?812552"></div>
+      <iframe
+        class="frame"
+        loading="lazy"
+        title="Dollar vs Treasury Yield"
+        src="https://flo.uri.sh/visualisation/27220639/embed"
+        style="height:560px"
+        allow="fullscreen"
+      ></iframe>
       <noscript>
-        <img src="https://public.flourish.studio/visualisation/27220639/thumbnail" width="100%" alt="Dollar vs Treasury yield chart thumbnail" />
+        <a href="https://public.flourish.studio/visualisation/27220639/" target="_blank" rel="noopener">View chart on Flourish</a>
       </noscript>
     </div>
 
     <p class="label">Gold and Silver Prices</p>
     <div class="viz">
-      <div class="flourish-embed flourish-chart" data-src="visualisation/27200704?812552"></div>
+      <iframe
+        class="frame"
+        loading="lazy"
+        title="Gold and Silver Prices"
+        src="https://flo.uri.sh/visualisation/27200704/embed"
+        style="height:560px"
+        allow="fullscreen"
+      ></iframe>
       <noscript>
-        <img src="https://public.flourish.studio/visualisation/27200704/thumbnail" width="100%" alt="Gold and silver prices chart thumbnail" />
+        <a href="https://public.flourish.studio/visualisation/27200704/" target="_blank" rel="noopener">View chart on Flourish</a>
       </noscript>
     </div>
 
     <p class="label">30-Year Mortgage vs Treasury Yield</p>
     <div class="viz">
-      <div class="flourish-embed flourish-chart" data-src="visualisation/27284880?812552"></div>
+      <iframe
+        class="frame"
+        loading="lazy"
+        title="30-Year Mortgage vs Treasury Yield"
+        src="https://flo.uri.sh/visualisation/27284880/embed"
+        style="height:560px"
+        allow="fullscreen"
+      ></iframe>
       <noscript>
-        <img src="https://public.flourish.studio/visualisation/27284880/thumbnail" width="100%" alt="Mortgage vs Treasury yield chart thumbnail" />
+        <a href="https://public.flourish.studio/visualisation/27284880/" target="_blank" rel="noopener">View chart on Flourish</a>
       </noscript>
     </div>
 
     <p class="label">Consumer Price Index · Monthly</p>
     <div class="viz">
-      <div class="flourish-embed flourish-chart" data-src="visualisation/25104015?812552"></div>
+      <iframe
+        class="frame"
+        loading="lazy"
+        title="CPI Monthly"
+        src="https://flo.uri.sh/visualisation/25104015/embed"
+        style="height:560px"
+        allow="fullscreen"
+      ></iframe>
       <noscript>
-        <img src="https://public.flourish.studio/visualisation/25104015/thumbnail" width="100%" alt="CPI monthly chart thumbnail" />
+        <a href="https://public.flourish.studio/visualisation/25104015/" target="_blank" rel="noopener">View chart on Flourish</a>
       </noscript>
     </div>
 
@@ -128,8 +175,5 @@
       ← <a href="../">Back to “The Work”</a>
     </p>
   </div>
-
-  <!-- Load Flourish ONCE, globally -->
-  <script src="https://public.flourish.studio/resources/embed.js"></script>
 </body>
 </html>
