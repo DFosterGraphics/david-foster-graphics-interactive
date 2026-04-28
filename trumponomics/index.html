@@ -1,4 +1,3 @@
-
 <!doctype html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -14,7 +13,6 @@
     margin: 0 0 10px;
     font-weight: 750;
     letter-spacing: -0.01em;
-    /* Big, but scales down nicely on mobile */
     font-size: clamp(32px, 5vw, 48px);
     line-height: 1.15;
   }
@@ -24,37 +22,80 @@
     color: #333;
     font-size: clamp(17px, 2.6vw, 20px);
   }
-  /* Optional: soft divider line */
   .hr { width: 90px; height: 3px; background: #e5e7eb; border-radius: 2px; margin: 14px auto 20px; }
 
-  /* Viz container is full-width inside the centered wrapper */
-  .viz { margin: 0 auto; }
-  /* Full-bleed option on small screens? Uncomment if you want edge-to-edge
-  @media (max-width: 768px) {
-    .wrap { padding-left: 0; padding-right: 0; }
-    .viz { width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+  .viz { margin: 0 auto; width: 100%; }
+  .viz .flourish-embed { width: 100% !important; }
+  .viz iframe { width: 100% !important; max-width: 100% !important; }
+
+  /* Rankings section */
+  .rankings-section {
+    margin: 56px auto 0;
   }
-  */
+  .rankings-section h2 {
+    margin: 0 0 8px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    font-size: clamp(24px, 3.5vw, 36px);
+    line-height: 1.2;
+  }
+  .rankings-deck {
+    margin: 0 auto 20px;
+    max-width: 46rem;
+    color: #333;
+    font-size: clamp(15px, 2.2vw, 18px);
+  }
+  .rankings-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin: 0 auto;
+  }
+
   .credit { margin: 14px 0 0; color: #666; font-size: 14px; }
   .credit a { color: #06c; text-decoration: none; border-bottom: 1px solid currentColor; }
 </style>
 
 <div class="wrap">
+
+  <!-- Main interactive -->
   <h1>How The Trump Economy Measures Up</h1>
   <div class="hr"></div>
   <p class="deck">
-    This chart pack shows how The Trump economy compares with that of prior presidents going back to Jimmy Carter in the 1970s, at the same point in each presidential term. Moody’s Analytics provides the data. 
+    This chart pack shows how the Trump economy compares with that of prior presidents going back to Jimmy Carter in the 1970s, at the same point in each presidential term. Moody's Analytics provides the data.
   </p>
 
   <div class="viz">
-    <!-- Flourish native embed (auto-resizes; keep the script only once per page) -->
     <div class="flourish-embed flourish-chart" data-src="visualisation/27100595"></div>
   </div>
 
+  <!-- Rankings section -->
+  <div class="rankings-section">
+    <div class="hr"></div>
+    <h2>How The Rankings Break Down</h2>
+    <p class="rankings-deck">
+      Compared with prior presidential terms since 1977, Trump 2 ranks 8th out of 13 overall. Here's how that overall rank is derived from six underlying economic metrics — and how every term stacks up.
+    </p>
+
+    <div class="rankings-grid">
+      <div class="viz">
+        <div class="flourish-embed flourish-table" data-src="visualisation/26461407">
+          <noscript><img src="https://public.flourish.studio/visualisation/26461407/thumbnail" width="100%" alt="table visualization" /></noscript>
+        </div>
+      </div>
+      <div class="viz">
+        <div class="flourish-embed flourish-scatter" data-src="visualisation/26433880">
+          <noscript><img src="https://public.flourish.studio/visualisation/26433880/thumbnail" width="100%" alt="scatter visualization" /></noscript>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <p class="credit">
-    Reporting: Rick Newman – The Rick Report · Visuals: David Foster Graphics ·
+    Reporting: Rick Newman – The Pinpoint Press · Visuals: David Foster Graphics ·
     <a href="https://public.flourish.studio/visualisation/27100595/" target="_blank" rel="noopener">View on Flourish</a>
   </p>
+
 </div>
 
 <script src="https://public.flourish.studio/resources/embed.js"></script>
