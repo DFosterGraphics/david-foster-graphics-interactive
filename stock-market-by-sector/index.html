@@ -1,0 +1,71 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Stock-Market Performance By Industry — David Foster Graphics</title>
+<meta name="description" content="How every S&P 500 sector has performed year-to-date in 2026, charted by David Foster Graphics for The Pinpoint Press.">
+<meta name="color-scheme" content="light">
+
+<style>
+  :root { --max: 1100px; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: #111; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 28px 16px 40px; text-align: center; }
+  h1 {
+    margin: 0 0 10px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.15;
+  }
+  .deck {
+    margin: 0 auto 20px;
+    max-width: 46rem;
+    color: #333;
+    font-size: clamp(17px, 2.6vw, 20px);
+  }
+  .hr { width: 90px; height: 3px; background: #e5e7eb; border-radius: 2px; margin: 14px auto 20px; }
+
+  .viz { margin: 0 auto; }
+
+  /* Second chart section */
+  .second-section {
+    margin: 56px auto 0;
+  }
+
+  .credit { margin: 14px 0 0; color: #666; font-size: 14px; }
+  .credit a { color: #06c; text-decoration: none; border-bottom: 1px solid currentColor; }
+</style>
+
+<div class="wrap">
+
+  <!-- Line chart -->
+  <h1>Stock-Market Performance By Industry</h1>
+  <div class="hr"></div>
+  <p class="deck">
+    Here's how the S&P 500 index has performed this year, along with each of the 11 industries represented in the index.
+  </p>
+
+  <div class="viz">
+    <div class="flourish-embed flourish-chart" data-src="visualisation/28806076?812552">
+      <noscript><img src="https://public.flourish.studio/visualisation/28806076/thumbnail" width="100%" alt="chart visualization" /></noscript>
+    </div>
+  </div>
+
+  <!-- Bar chart section -->
+  <div class="second-section">
+    <div class="hr"></div>
+
+    <div class="viz">
+      <div class="flourish-embed flourish-chart" data-src="visualisation/28806058?812552">
+        <noscript><img src="https://public.flourish.studio/visualisation/28806058/thumbnail" width="100%" alt="chart visualization" /></noscript>
+      </div>
+    </div>
+  </div>
+
+  <p class="credit">
+    Reporting: Rick Newman – The Pinpoint Press · Visuals: David Foster Graphics ·
+    <a href="https://www.thepinpointpress.com/p/pinpoint-markets-stocks-economy-energy-crisis-2026" target="_blank" rel="noopener">Read the column</a>
+  </p>
+
+</div>
+
+<script src="https://public.flourish.studio/resources/embed.js"></script>
