@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Network · David Foster Graphics</title>
+  <meta name="description" content="An animated visualization of 30 years of career and life connections.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- D3 & Scrollama -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://unpkg.com/scrollama"></script>
+
+  <style>
+    :root {
+      --color-job:        #1565C0;
+      --color-freelance:  #64B5F6;
+      --color-music:      #9C27B0;
+      --color-personal:   #FF9800;
+      --color-college:    #E91E63;
+      --color-linkedin:   #90A4AE;
+      --color-conference: #4CAF50;
+      --color-self:       #000000;
+      --bg:               #FAFAF8;
+      --text:             #1a1a1a;
+      --text-muted:       #777;
+      --caption-width:    380px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    header {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 64px 32px 32px;
+    }
+
+    .site-brand {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 32px;
+    }
+    .site-brand:hover { color: var(--text); }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+
+    .deck {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    /* ── LEGEND ─────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      margin-bottom: 48px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── SCROLLY SECTION ────────────────────────────────── */
+    #scrolly {
+      position: relative;
+      display: flex;
+      gap: 0;
+    }
+
+    /* Sticky viz panel */
+    #viz-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: calc(100% - var(--caption-width));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--bg);
+    }
+
+    #viz-container {
+      width: 100%;
+      max-width: 860px;
+    }
+
+    #viz-container svg {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Timeline bar */
+    #timeline-bar {
+      width: 100%;
+      max-width: 860px;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #timeline-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text);
+      min-width: 100px;
+    }
+
+    #timeline-track {
+      flex: 1;
+      height: 2px;
+      background: #e0e0e0;
+      position: relative;
+      border-radius: 1px;
+    }
+
+    #timeline-progress {
+      height: 100%;
+      background: var(--text);
+      border-radius: 1px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    #connection-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      min-width: 80px;
+      text-align: right;
+    }
+
+    /* Caption steps panel */
+    #steps {
+      width: var(--caption-width);
+      flex-shrink: 0;
+    }
+
+    .step {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 40px 32px;
+    }
+
+    .step:first-child { padding-top: 80px; }
+    .step:last-child  { padding-bottom: 80px; }
+
+    .step-inner {
+      opacity: 0.25;
+      transition: opacity 0.4s ease;
+    }
+
+    .step.is-active .step-inner {
+      opacity: 1;
+    }
+
+    .step-date {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .step-headline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .step-body {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .step-body strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .step-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 3px;
+      margin-top: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── OUTRO ──────────────────────────────────────────── */
+    #outro {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 32px 120px;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    #outro h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    #outro p {
+      color: var(--text-muted);
+      max-width: 560px;
+      margin-bottom: 12px;
+    }
+
+    .byline {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 32px;
+    }
+
+    .byline a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 800px) {
+      :root { --caption-width: 100%; }
+
+      #scrolly { flex-direction: column; }
+
+      #viz-sticky {
+        position: relative;
+        height: 50vh;
+        width: 100%;
+      }
+
+      #steps { width: 100%; }
+
+      .step { min-height: 60vh; padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────────────────────────────── -->
+<header>
+  <a class="site-brand" href="https://viz.davidfostergraphics.com/">← David Foster Graphics</a>
+
+  <h1>30 Years.<br>2,236 Connections.</h1>
+
+  <p class="deck">
+    Every person I've connected with on LinkedIn, animated in the order we met —
+    tracing three decades of journalism, data visualization, music, and the
+    unexpected detours in between.
+  </p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--color-job)"></div> Job</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--color-freelance)"></div> Freelance</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--color-music)"></div> Music</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--color-personal)"></div> Personal</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--color-college)"></div> College</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--color-conference)"></div> Conference / Industry</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--color-linkedin)"></div> LinkedIn Connection</div>
+  </div>
+</header>
+
+<!-- ── SCROLLY ─────────────────────────────────────────────── -->
+<section id="scrolly">
+
+  <!-- Sticky viz -->
+  <div id="viz-sticky">
+    <div id="viz-container">
+      <!-- D3 renders here -->
+    </div>
+    <div id="timeline-bar">
+      <div id="timeline-label">Feb 2007</div>
+      <div id="timeline-track"><div id="timeline-progress"></div></div>
+      <div id="connection-count">1 connection</div>
+    </div>
+  </div>
+
+  <!-- Scroll steps -->
+  <div id="steps">
+
+    <div class="step" data-date="2007-02-06">
+      <div class="step-inner">
+        <div class="step-date">February 2007</div>
+        <div class="step-headline">One node. Eighteen years of colleagues.</div>
+        <div class="step-body">
+          I joined LinkedIn in February 2007, still at <strong>PC Magazine</strong> —
+          a job I'd held for 18 years. Within months, 195 colleagues appeared,
+          formalizing relationships that stretched back to 1989.
+          <br><br>
+          The blue cluster forming in the upper left is everything I'd built.
+          I didn't know yet that I was about to lose it.
+        </div>
+        <span class="step-tag" style="background:#E3F0FF;color:var(--color-job)">Job · PC Magazine</span>
+      </div>
+    </div>
+
+    <div class="step" data-date="2007-10-01">
+      <div class="step-inner">
+        <div class="step-date">October 2007</div>
+        <div class="step-headline">The stream stops.</div>
+        <div class="step-body">
+          PC Magazine shut down its print edition. After 18 years, I was out.
+          Watch the blue node stream slow, then cut off almost entirely.
+          <br><br>
+          The recession was coming. Media was imploding.
+          The network held its breath.
+        </div>
+        <span class="step-tag" style="background:#E3F0FF;color:var(--color-job)">Job · PC Magazine ends</span>
+      </div>
+    </div>
+
+    <div class="step" data-date="2008-06-01">
+      <div class="step-inner">
+        <div class="step-date">2008 – 2011</div>
+        <div class="step-headline">BusinessWeek. Fortune. Refusing to leave journalism.</div>
+        <div class="step-body">
+          Two more mastheads. Brief stints, but significant ones.
+          <strong>BusinessWeek</strong> (2008–2010), then <strong>Fortune</strong> (2010–2011).
+          New blue clusters forming, smaller than PC Magazine but dense.
+          <br><br>
+          The purple music world kept growing through all of it —
+          a parallel life that never stopped.
+        </div>
+        <span class="step-tag" style="background:#E3F0FF;color:var(--color-job)">Job · BusinessWeek + Fortune</span>
+      </div>
+    </div>
+
+    <div class="step" data-date="2011-04-01">
+      <div class="step-inner">
+        <div class="step-date">2011</div>
+        <div class="step-headline">The pivot. Everything explodes.</div>
+        <div class="step-body">
+          I joined <strong>Vindico</strong>, an ad tech startup. A complete
+          industry change — from editorial to programmatic advertising.
+          <br><br>
+          438 connections in a single year. Watch the network detonate.
+          New colors, new world, new velocity. The pivot that saved everything.
+        </div>
+        <span class="step-tag" style="background:#E3F0FF;color:var(--color-job)">Job · Vindico / Viant</span>
+      </div>
+    </div>
+
+    <div class="step" data-date="2017-01-01">
+      <div class="step-inner">
+        <div class="step-date">2017</div>
+        <div class="step-headline">The return.</div>
+        <div class="step-body">
+          Six years in ad tech, then <strong>Yahoo Finance</strong> called.
+          Back to journalism. Back to data visualization.
+          This time with a deeper toolkit and a clearer identity.
+          <br><br>
+          Eight years. The longest chapter since PC Magazine.
+        </div>
+        <span class="step-tag" style="background:#E3F0FF;color:var(--color-job)">Job · Yahoo Finance</span>
+      </div>
+    </div>
+
+    <div class="step" data-date="2024-09-01">
+      <div class="step-inner">
+        <div class="step-date">September 2024</div>
+        <div class="step-headline">ONA. The industry finds me.</div>
+        <div class="step-body">
+          The Online News Association conference.
+          Watch the green <strong>Conference / Industry</strong> cluster
+          light up almost overnight — dataviz journalists, editors,
+          developers from across the field.
+          <br><br>
+          The community I'd been part of for years, finally formalized.
+        </div>
+        <span class="step-tag" style="background:#E8F5E9;color:#2E7D32">Conference · ONA</span>
+      </div>
+    </div>
+
+    <div class="step" data-date="2025-09-01">
+      <div class="step-inner">
+        <div class="step-date">Fall 2025</div>
+        <div class="step-headline">The layoff. The LinkedIn surge.</div>
+        <div class="step-body">
+          Yahoo Finance. Eight years. Gone.
+          <br><br>
+          Watch what happens to the gray <strong>LinkedIn Connection</strong> cluster.
+          The network doesn't mourn — it mobilizes.
+          Recruiters. Colleagues. Strangers who know the work.
+          All arriving at once.
+        </div>
+        <span class="step-tag" style="background:#F5F5F5;color:#546E7A">LinkedIn Connection · surge</span>
+      </div>
+    </div>
+
+    <div class="step" data-date="2026-05-09">
+      <div class="step-inner">
+        <div class="step-date">Now</div>
+        <div class="step-headline">Still building.</div>
+        <div class="step-body">
+          2,236 connections. 30 years. Seven connection types.
+          234 distinct places where lives intersected.
+          <br><br>
+          The purple music world — <strong>Baggot Inn, Losers Lounge,
+          Bubble</strong> — ran alongside every career chapter without pause.
+          That's not a side project. That's half a life.
+          <br><br>
+          The story isn't finished. The network keeps growing.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+</section><!-- /scrolly -->
+
+<!-- ── OUTRO ───────────────────────────────────────────────── -->
+<section id="outro">
+  <h2>About this visualization</h2>
+  <p>
+    Each dot represents a LinkedIn connection, colored by how I know them
+    and animated in the order we connected — from February 2007 to today.
+    Names are anonymized to protect privacy.
+  </p>
+  <p>
+    Built with D3.js and Scrollama. Data tagged manually over several weeks,
+    one connection at a time.
+  </p>
+  <div class="byline">
+    Visualization by <a href="https://davidfostergraphics.com">David Foster Graphics</a>
+  </div>
+</section>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script>
+// ── DATA & STATE ────────────────────────────────────────────
+let allNodes = [], allLinks = [];
+let currentTime = new Date("2007-02-06");
+const startDate = new Date("2007-02-06");
+const endDate   = new Date("2026-05-09");
+const totalMs   = endDate - startDate;
+
+// ── D3 SETUP ────────────────────────────────────────────────
+const width  = 928;
+const height = 680;
+
+const colors = {
+  "self":               "#000000",
+  "Job":                "#1565C0",
+  "Freelance":          "#64B5F6",
+  "Music":              "#9C27B0",
+  "Personal":           "#FF9800",
+  "College":            "#E91E63",
+  "LinkedIn":           "#90A4AE",
+  "Conference-Industry":"#4CAF50"
+};
+
+const typePositions = {
+  x: { "self":0,"Job":-180,"Music":180,"LinkedIn":50,"Freelance":-120,"Personal":160,"College":-160,"Conference-Industry":80 },
+  y: { "self":0,"Job":-120,"Music":-80,"LinkedIn":120,"Freelance":100,"Personal":80,"College":-120,"Conference-Industry":-40 }
+};
+
+const svg = d3.select("#viz-container")
+  .append("svg")
+  .attr("viewBox", [-width/2, -height/2, width, height])
+  .attr("width", width)
+  .attr("height", height)
+  .attr("style", "max-width:100%;height:auto;");
+
+let linkG = svg.append("g").attr("stroke","#999").attr("stroke-opacity",0.15).selectAll("line");
+let nodeG = svg.append("g").attr("stroke-width",0).selectAll("circle");
+
+const simulation = d3.forceSimulation()
+  .force("charge", d3.forceManyBody().strength(-20))
+  .force("link",   d3.forceLink().id(d => d.id).distance(25).strength(0.8))
+  .force("x",      d3.forceX(d => typePositions.x[d.group] || 0).strength(0.2))
+  .force("y",      d3.forceY(d => typePositions.y[d.group] || 0).strength(0.2))
+  .on("tick", ticked);
+
+function ticked() {
+  nodeG.attr("cx", d => d.x).attr("cy", d => d.y);
+  linkG.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+       .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+}
+
+// Drag
+function drag(sim) {
+  return d3.drag()
+    .on("start", (e,d) => { if(!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+    .on("drag",  (e,d) => { d.fx=e.x; d.fy=e.y; })
+    .on("end",   (e,d) => { if(!e.active) sim.alphaTarget(0); d.fx=null; d.fy=null; });
+}
+
+// ── UPDATE FUNCTION ─────────────────────────────────────────
+let oldPositions = new Map();
+
+function updateViz(time) {
+  currentTime = time;
+  const t = time instanceof Date ? time : new Date(time);
+
+  const nodes = allNodes.filter(d => d.start == null || new Date(d.start) <= t);
+  const nodeIds = new Set(nodes.map(d => d.id));
+  const links = allLinks.filter(d => {
+    const src = typeof d.source === 'object' ? d.source.id : d.source;
+    const tgt = typeof d.target === 'object' ? d.target.id : d.target;
+    return nodeIds.has(src) && nodeIds.has(tgt);
+  });
+
+  nodes.forEach(d => {
+    if (d.nodeType === "self") { d.fx = 0; d.fy = 0; }
+    const o = oldPositions.get(d.id);
+    if (o) { d.x=o.x; d.y=o.y; d.vx=o.vx; d.vy=o.vy; }
+  });
+
+  nodeG = nodeG
+    .data(nodes, d => d.id)
+    .join(enter => enter.append("circle")
+      .attr("r", d => d.nodeType==="self"?12 : d.nodeType==="type"?8 : d.nodeType==="hub"?6 : 4)
+      .attr("fill", d => colors[d.group] || "#999")
+      .attr("stroke", d => d.nodeType==="self" ? "#fff" : "none")
+      .attr("stroke-width", d => d.nodeType==="self" ? 3 : 0)
+      .call(drag(simulation))
+      .call(n => n.append("title").text(d => d.label || d.id)));
+
+  linkG = linkG
+    .data(links, d => {
+      const s = typeof d.source==='object' ? d.source.id : d.source;
+      const t = typeof d.target==='object' ? d.target.id : d.target;
+      return `${s}-${t}`;
+    })
+    .join("line");
+
+  simulation.nodes(nodes);
+  simulation.force("link").links(links);
+  simulation.alpha(1).restart().tick();
+  ticked();
+
+  // Save positions
+  nodes.forEach(d => oldPositions.set(d.id, {x:d.x,y:d.y,vx:d.vx,vy:d.vy}));
+
+  // Update timeline UI
+  const progress = Math.max(0, Math.min(1, (t - startDate) / totalMs));
+  document.getElementById("timeline-progress").style.width = (progress * 100) + "%";
+  document.getElementById("timeline-label").textContent =
+    t.toLocaleDateString("en-US", {month:"short", year:"numeric"});
+  const personCount = nodes.filter(d => d.nodeType === "person").length;
+  document.getElementById("connection-count").textContent =
+    personCount.toLocaleString() + " connection" + (personCount !== 1 ? "s" : "");
+}
+
+// ── SCROLLAMA ───────────────────────────────────────────────
+function initScrollama() {
+  const scroller = scrollama();
+
+  scroller.setup({
+    step: ".step",
+    offset: 0.5,
+    debug: false
+  })
+  .onStepEnter(({ element }) => {
+    document.querySelectorAll(".step").forEach(s => s.classList.remove("is-active"));
+    element.classList.add("is-active");
+
+    const dateStr = element.dataset.date;
+    if (dateStr) {
+      animateTo(new Date(dateStr));
+    }
+  });
+
+  window.addEventListener("resize", scroller.resize);
+}
+
+// Animate smoothly to a target date
+let animationFrame;
+function animateTo(targetDate) {
+  cancelAnimationFrame(animationFrame);
+  const start = currentTime instanceof Date ? currentTime : new Date(currentTime);
+  const end = targetDate;
+  const duration = 2000; // ms
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(1, elapsed / duration);
+    // Ease in-out
+    const eased = progress < 0.5
+      ? 2 * progress * progress
+      : -1 + (4 - 2 * progress) * progress;
+
+    const t = new Date(start.getTime() + eased * (end.getTime() - start.getTime()));
+    updateViz(t);
+
+    if (progress < 1) {
+      animationFrame = requestAnimationFrame(step);
+    }
+  }
+
+  animationFrame = requestAnimationFrame(step);
+}
+
+// ── LOAD DATA & INIT ────────────────────────────────────────
+Promise.all([
+  fetch("nodes_v3.json").then(r => r.json()),
+  fetch("links_v3.json").then(r => r.json())
+]).then(([nodes, links]) => {
+  allNodes = nodes;
+  allLinks = links;
+
+  // Initial render at start date
+  updateViz(startDate);
+
+  // Activate first step
+  const firstStep = document.querySelector(".step");
+  if (firstStep) firstStep.classList.add("is-active");
+
+  // Init scrollama
+  initScrollama();
+}).catch(err => {
+  console.error("Failed to load data:", err);
+  document.getElementById("viz-container").innerHTML =
+    '<p style="padding:40px;color:#999;text-align:center">Could not load network data.<br>Make sure nodes_v3.json and links_v3.json are in the same folder.</p>';
+});
+</script>
+
+</body>
+</html>
