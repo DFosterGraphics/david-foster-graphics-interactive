@@ -273,19 +273,56 @@
 
     /* ── RESPONSIVE ─────────────────────────────────────── */
     @media (max-width: 800px) {
-      :root { --caption-width: 100%; }
-
-      #scrolly { flex-direction: column; }
-
-      #viz-sticky {
+      #scrolly {
+        display: block;
         position: relative;
-        height: 50vh;
-        width: 100%;
       }
 
-      #steps { width: 100%; }
+      /* Viz stays sticky at top, takes up top 45% of viewport */
+      #viz-sticky {
+        position: sticky;
+        top: 0;
+        height: 45vh;
+        width: 100%;
+        z-index: 10;
+        background: var(--bg);
+        border-bottom: 1px solid #eee;
+        padding: 10px 16px;
+        justify-content: center;
+      }
 
-      .step { min-height: 60vh; padding: 32px 20px; }
+      #viz-container svg {
+        max-height: 34vh;
+      }
+
+      #timeline-bar {
+        margin-top: 6px;
+      }
+
+      #timeline-label {
+        font-size: 1rem;
+      }
+
+      /* Steps scroll below the sticky viz */
+      #steps {
+        width: 100%;
+        padding-top: 0;
+      }
+
+      .step {
+        min-height: 60vh;
+        padding: 32px 20px;
+      }
+
+      .step:first-child { padding-top: 40px; }
+
+      .step-headline { font-size: 1.2rem; }
+
+      header { padding: 40px 20px 24px; }
+
+      h1 { font-size: 2rem; }
+
+      .legend { gap: 8px 16px; }
     }
   </style>
 </head>
