@@ -278,29 +278,36 @@
         position: relative;
       }
 
-      /* Viz stays sticky at top, takes up top 45% of viewport */
+      /* Viz stays sticky at top, takes up top 55% of viewport */
       #viz-sticky {
         position: sticky;
         top: 0;
-        height: 45vh;
+        height: 55vh;
         width: 100%;
         z-index: 10;
         background: var(--bg);
         border-bottom: 1px solid #eee;
-        padding: 10px 16px;
+        padding: 6px 8px 4px;
         justify-content: center;
       }
 
+      #viz-container {
+        width: 100%;
+        flex: 1;
+      }
+
       #viz-container svg {
-        max-height: 34vh;
+        max-height: 44vh;
+        width: 100%;
       }
 
       #timeline-bar {
-        margin-top: 6px;
+        margin-top: 4px;
+        padding: 0 4px;
       }
 
       #timeline-label {
-        font-size: 1rem;
+        font-size: 0.95rem;
       }
 
       /* Steps scroll below the sticky viz */
