@@ -767,7 +767,7 @@ function initScrollama() {
 
   scroller.setup({
     step: ".step",
-    offset: isMobile ? 0.15 : 0.5,
+    offset: isMobile ? 0.3 : 0.5,
     debug: false
   })
   .onStepEnter(({ element }) => {
@@ -789,7 +789,7 @@ function animateTo(targetDate) {
   cancelAnimationFrame(animationFrame);
   const start = currentTime instanceof Date ? currentTime : new Date(currentTime);
   const end = targetDate;
-  const duration = 2000; // ms
+  const duration = isMobile ? 1000 : 2000; // ms
   const startTime = performance.now();
 
   function step(now) {
