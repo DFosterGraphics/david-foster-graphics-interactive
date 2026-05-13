@@ -28,7 +28,7 @@
       --bg:               #FAFAF8;
       --text:             #1a1a1a;
       --text-muted:       #777;
-      --caption-width:    380px;
+      --caption-width:    420px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -545,6 +545,7 @@ let currentTime = new Date("2007-02-06");
 const startDate = new Date("2007-02-06");
 const endDate   = new Date("2026-05-09");
 const totalMs   = endDate - startDate;
+const seenHubs_global = new Set();
 
 // ── D3 SETUP ────────────────────────────────────────────────
 const width  = 928;
@@ -562,8 +563,8 @@ const colors = {
 };
 
 const typePositions = {
-  x: { "self":0,"Job":-180,"Music":180,"LinkedIn":50,"Freelance":-120,"Personal":160,"College":-160,"Conference-Industry":80 },
-  y: { "self":0,"Job":-120,"Music":-80,"LinkedIn":120,"Freelance":100,"Personal":80,"College":-120,"Conference-Industry":-40 }
+  x: { "self":0,"Job":-140,"Music":160,"LinkedIn":0,"Freelance":-100,"Personal":140,"College":-150,"Conference-Industry":60 },
+  y: { "self":0,"Job":-100,"Music":-80,"LinkedIn":160,"Freelance":120,"Personal":80,"College":-130,"Conference-Industry":-60 }
 };
 
 const svg = d3.select("#viz-container")
@@ -593,10 +594,11 @@ const labeledHubs = new Set([
 ]);
 
 const simulation = d3.forceSimulation()
-  .force("charge", d3.forceManyBody().strength(-20))
-  .force("link",   d3.forceLink().id(d => d.id).distance(25).strength(0.8))
-  .force("x",      d3.forceX(d => typePositions.x[d.group] || 0).strength(0.2))
-  .force("y",      d3.forceY(d => typePositions.y[d.group] || 0).strength(0.2))
+  .force("charge", d3.forceManyBody().strength(-15))
+  .force("link",   d3.forceLink().id(d => d.id).distance(20).strength(0.9))
+  .force("x",      d3.forceX(d => typePositions.x[d.group] || 0).strength(0.25))
+  .force("y",      d3.forceY(d => typePositions.y[d.group] || 0).strength(0.25))
+  .force("center", d3.forceCenter(0, 0).strength(0.05))
   .on("tick", ticked);
 
 function ticked() {
@@ -653,18 +655,31 @@ function updateViz(time) {
     })
     .join("line");
 
+  // Track which hubs have already been introduced
+  const seenHubs = seenHubs_global;
+
   // Labels for prominent hub nodes
   labelG = labelG
     .data(nodes.filter(d => labeledHubs.has(d.id)), d => d.id)
-    .join(enter => enter.append("text")
-      .text(d => d.label)
-      .attr("font-size", "11px")
-      .attr("font-family", "'DM Sans', sans-serif")
-      .attr("font-weight", "500")
-      .attr("fill", d => colors[d.group] || "#333")
-      .attr("text-anchor", "middle")
-      .attr("opacity", 0)
-      .call(t => t.transition().duration(600).attr("opacity", 1)));
+    .join(enter => {
+      const isNew = !seenHubs.has(enter.datum ? enter.datum().id : null);
+      const txt = enter.append("text")
+        .text(d => d.label)
+        .attr("font-size", "11px")
+        .attr("font-family", "'DM Sans', sans-serif")
+        .attr("font-weight", "700")
+        .attr("fill", "#111111")
+        .attr("stroke", "white")
+        .attr("stroke-width", "3px")
+        .attr("stroke-linejoin", "round")
+        .attr("paint-order", "stroke")
+        .attr("text-anchor", "middle")
+        .attr("opacity", 0);
+      txt.call(t => t.transition().duration(600).attr("opacity", 1)
+        .transition().delay(1200).duration(800)
+        .attr("fill", d => { seenHubs.add(d.id); return colors[d.group] || "#333"; }));
+      return txt;
+    });
 
   simulation.nodes(nodes);
   simulation.force("link").links(links);
