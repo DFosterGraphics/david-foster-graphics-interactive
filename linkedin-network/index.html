@@ -547,11 +547,9 @@ const endDate   = new Date("2026-05-09");
 const totalMs   = endDate - startDate;
 
 // ── D3 SETUP ────────────────────────────────────────────────
-const width  = 928;
-const height = 680;
-
-// Detect mobile for larger nodes
 const isMobile = window.innerWidth < 800;
+const width  = isMobile ? 500 : 928;
+const height = isMobile ? 500 : 680;
 const nodeRadius = {
   self:     isMobile ? 16 : 12,
   type:     isMobile ? 10 : 8,
