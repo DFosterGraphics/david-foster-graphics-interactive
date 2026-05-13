@@ -282,12 +282,12 @@
       #viz-sticky {
         position: sticky;
         top: 0;
-        height: 55vh;
+        height: 58vh;
         width: 100%;
         z-index: 10;
         background: var(--bg);
         border-bottom: 1px solid #eee;
-        padding: 6px 8px 4px;
+        padding: 4px 4px 2px;
         justify-content: center;
       }
 
@@ -297,7 +297,7 @@
       }
 
       #viz-container svg {
-        max-height: 44vh;
+        max-height: 48vh;
         width: 100%;
       }
 
@@ -550,6 +550,15 @@ const totalMs   = endDate - startDate;
 const width  = 928;
 const height = 680;
 
+// Detect mobile for larger nodes
+const isMobile = window.innerWidth < 800;
+const nodeRadius = {
+  self:     isMobile ? 16 : 12,
+  type:     isMobile ? 10 : 8,
+  hub:      isMobile ? 8  : 6,
+  person:   isMobile ? 5  : 4
+};
+
 const colors = {
   "self":               "#000000",
   "Job":                "#1565C0",
@@ -561,10 +570,13 @@ const colors = {
   "Conference-Industry":"#4CAF50"
 };
 
+const posScale = isMobile ? 0.6 : 1.0;
 const typePositions = {
   x: { "self":0,"Job":-140,"Music":160,"LinkedIn":0,"Freelance":-100,"Personal":140,"College":-150,"Conference-Industry":60 },
   y: { "self":0,"Job":-100,"Music":-80,"LinkedIn":160,"Freelance":120,"Personal":80,"College":-130,"Conference-Industry":-60 }
 };
+// Scale positions for mobile
+Object.keys(typePositions.x).forEach(k => { typePositions.x[k] *= posScale; typePositions.y[k] *= posScale; });
 
 const svg = d3.select("#viz-container")
   .append("svg")
@@ -639,7 +651,7 @@ function updateViz(time) {
   nodeG = nodeG
     .data(nodes, d => d.id)
     .join(enter => enter.append("circle")
-      .attr("r", d => d.nodeType==="self"?12 : d.nodeType==="type"?8 : d.nodeType==="hub"?6 : 4)
+      .attr("r", d => d.nodeType==="self" ? nodeRadius.self : d.nodeType==="type" ? nodeRadius.type : d.nodeType==="hub" ? nodeRadius.hub : nodeRadius.person)
       .attr("fill", d => colors[d.group] || "#999")
       .attr("stroke", d => d.nodeType==="self" ? "#fff" : "none")
       .attr("stroke-width", d => d.nodeType==="self" ? 3 : 0)
@@ -659,7 +671,7 @@ function updateViz(time) {
     .data(nodes.filter(d => labeledHubs.has(d.id)), d => d.id)
     .join(enter => enter.append("text")
       .text(d => d.label)
-      .attr("font-size", "11px")
+      .attr("font-size", isMobile ? "13px" : "11px")
       .attr("font-family", "'DM Sans', sans-serif")
       .attr("font-weight", "700")
       .attr("fill", "#111111")
