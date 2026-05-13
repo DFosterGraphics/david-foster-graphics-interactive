@@ -28,7 +28,7 @@
       --bg:               #FAFAF8;
       --text:             #1a1a1a;
       --text-muted:       #777;
-      --caption-width:    420px;
+      --caption-width:    480px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -118,8 +118,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 20px 20px 20px 40px;
       background: var(--bg);
+      isolation: isolate;
+    }
+
+    #viz-container {
+      width: 100%;
+      max-width: 680px;
     }
 
     #viz-container {
@@ -184,7 +190,7 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 40px 32px;
+      padding: 40px 40px 40px 24px;
     }
 
     .step:first-child { padding-top: 80px; }
@@ -271,6 +277,49 @@
       border-bottom: 1px solid currentColor;
     }
 
+    /* ── VIZ LEGEND ─────────────────────────────────────── */
+    #viz-legend {
+      position: absolute;
+      bottom: 48px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: rgba(250,250,248,0.85);
+      backdrop-filter: blur(4px);
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 0.5px solid #e0e0e0;
+    }
+
+    .vl-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .vl-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 800px) {
+      #viz-legend {
+        bottom: 52px;
+        left: 8px;
+        padding: 5px 8px;
+        gap: 3px;
+      }
+      .vl-item { font-size: 10px; }
+      .vl-dot { width: 7px; height: 7px; }
+    }
+
     /* ── RESPONSIVE ─────────────────────────────────────── */
     @media (max-width: 800px) {
       #scrolly {
@@ -347,15 +396,7 @@
     unexpected detours in between.
   </p>
 
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--color-job)"></div> Job</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--color-freelance)"></div> Freelance</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--color-music)"></div> Music</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--color-personal)"></div> Personal</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--color-college)"></div> College</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--color-conference)"></div> Conference / Industry</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--color-linkedin)"></div> LinkedIn Connection</div>
-  </div>
+
 </header>
 
 <!-- ── SCROLLY ─────────────────────────────────────────────── -->
@@ -365,6 +406,15 @@
   <div id="viz-sticky">
     <div id="viz-container">
       <!-- D3 renders here -->
+    </div>
+    <div id="viz-legend">
+      <div class="vl-item"><span class="vl-dot" style="background:#1565C0"></span>Job</div>
+      <div class="vl-item"><span class="vl-dot" style="background:#64B5F6"></span>Freelance</div>
+      <div class="vl-item"><span class="vl-dot" style="background:#9C27B0"></span>Music</div>
+      <div class="vl-item"><span class="vl-dot" style="background:#FF9800"></span>Personal</div>
+      <div class="vl-item"><span class="vl-dot" style="background:#E91E63"></span>College</div>
+      <div class="vl-item"><span class="vl-dot" style="background:#4CAF50"></span>Industry</div>
+      <div class="vl-item"><span class="vl-dot" style="background:#90A4AE"></span>LinkedIn</div>
     </div>
     <div id="timeline-bar">
       <div id="timeline-label">Feb 2007</div>
@@ -551,10 +601,10 @@ const isMobile = window.innerWidth < 800;
 const width  = isMobile ? 500 : 928;
 const height = isMobile ? 500 : 680;
 const nodeRadius = {
-  self:     isMobile ? 16 : 12,
-  type:     isMobile ? 10 : 8,
-  hub:      isMobile ? 8  : 6,
-  person:   isMobile ? 5  : 4
+  self:     isMobile ? 18 : 12,
+  type:     isMobile ? 11 : 8,
+  hub:      isMobile ? 9  : 6,
+  person:   isMobile ? 6  : 4
 };
 
 const colors = {
@@ -669,12 +719,12 @@ function updateViz(time) {
     .data(nodes.filter(d => labeledHubs.has(d.id)), d => d.id)
     .join(enter => enter.append("text")
       .text(d => d.label)
-      .attr("font-size", isMobile ? "13px" : "11px")
+      .attr("font-size", isMobile ? "15px" : "11px")
       .attr("font-family", "'DM Sans', sans-serif")
       .attr("font-weight", "700")
       .attr("fill", "#111111")
       .attr("stroke", "white")
-      .attr("stroke-width", "3px")
+      .attr("stroke-width", isMobile ? "4px" : "3px")
       .attr("stroke-linejoin", "round")
       .attr("paint-order", "stroke")
       .attr("text-anchor", "middle")
