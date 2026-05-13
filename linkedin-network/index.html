@@ -545,7 +545,6 @@ let currentTime = new Date("2007-02-06");
 const startDate = new Date("2007-02-06");
 const endDate   = new Date("2026-05-09");
 const totalMs   = endDate - startDate;
-const seenHubs_global = new Set();
 
 // ── D3 SETUP ────────────────────────────────────────────────
 const width  = 928;
@@ -655,31 +654,25 @@ function updateViz(time) {
     })
     .join("line");
 
-  // Track which hubs have already been introduced
-  const seenHubs = seenHubs_global;
-
   // Labels for prominent hub nodes
   labelG = labelG
     .data(nodes.filter(d => labeledHubs.has(d.id)), d => d.id)
-    .join(enter => {
-      const isNew = !seenHubs.has(enter.datum ? enter.datum().id : null);
-      const txt = enter.append("text")
-        .text(d => d.label)
-        .attr("font-size", "11px")
-        .attr("font-family", "'DM Sans', sans-serif")
-        .attr("font-weight", "700")
-        .attr("fill", "#111111")
-        .attr("stroke", "white")
-        .attr("stroke-width", "3px")
-        .attr("stroke-linejoin", "round")
-        .attr("paint-order", "stroke")
-        .attr("text-anchor", "middle")
-        .attr("opacity", 0);
-      txt.call(t => t.transition().duration(600).attr("opacity", 1)
+    .join(enter => enter.append("text")
+      .text(d => d.label)
+      .attr("font-size", "11px")
+      .attr("font-family", "'DM Sans', sans-serif")
+      .attr("font-weight", "700")
+      .attr("fill", "#111111")
+      .attr("stroke", "white")
+      .attr("stroke-width", "3px")
+      .attr("stroke-linejoin", "round")
+      .attr("paint-order", "stroke")
+      .attr("text-anchor", "middle")
+      .attr("opacity", 0)
+      .call(t => t.transition().duration(600)
+        .attr("opacity", 1)
         .transition().delay(1200).duration(800)
-        .attr("fill", d => { seenHubs.add(d.id); return colors[d.group] || "#333"; }));
-      return txt;
-    });
+        .attr("fill", d => colors[d.group] || "#333")));
 
   simulation.nodes(nodes);
   simulation.force("link").links(links);
