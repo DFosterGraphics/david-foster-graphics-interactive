@@ -48,6 +48,40 @@
       max-width: 1280px;
       margin: 0 auto;
       padding: 64px 32px 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .profile-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .profile-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e0e0;
+    }
+
+    .profile-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .profile-name strong {
+      display: block;
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 2px;
     }
 
     .site-brand {
@@ -397,6 +431,14 @@
 <header>
   <a class="site-brand" href="https://viz.davidfostergraphics.com/">← David Foster Graphics</a>
 
+  <div class="profile-block">
+    <img src="linkedin-profile.png" alt="David Foster" class="profile-img" />
+    <div class="profile-name">
+      <strong>David Foster</strong>
+      Data Visualization · Journalism · Music
+    </div>
+  </div>
+
   <h1>30 Years.<br>2,236 Connections.</h1>
 
   <p class="deck">
@@ -404,7 +446,6 @@
     <br><br>
     At a certain point in life, you start wanting to see the shape of things.
   </p>
-
 
 </header>
 
